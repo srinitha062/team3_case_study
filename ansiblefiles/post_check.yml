@@ -1,0 +1,30 @@
+---
+- name: Post-Check - Recheck CPU and Memory Utilization
+  hosts: _ManagedNode
+  become: yes  # Ensure we have sudo privileges to install packages and start services
+  gather_facts: yes
+
+  tasks:
+    - name: Check CPU utilization after cleanup
+      shell: 'top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk "{print 100 - \$1}"'
+      register: cpu_utilization_post
+      changed_when: false
+
+    - name: Check Memory utilization after cleanup
+      shell: 'free | grep Mem | awk "{print \$3/\$2 * 100.0}"'
+      register: memory_utilization_post
+      changed_when: false
+
+    - name: Display CPU and Memory Utilization after cleanup
+      debug:
+        msg: "CPU: {{ cpu_utilization_post.stdout }}%, Memory: {{ memory_utilization_post.stdout }}%"
+
+    - name: Check if CPU utilization is within acceptable range
+      fail:
+        msg: "CPU utilization is still too high: {{ cpu_utilization_post.stdout }}%"
+      when: cpu_utilization_post.stdout|float > 80
+
+    - name: Check if Memory utilization is within acceptable range
+      fail:
+        msg: "Memory utilization is still too high: {{ memory_utilization_post.stdout }}%"
+      when: memory_utilization_post.stdout|float > 80

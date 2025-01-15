@@ -1,0 +1,25 @@
+---
+- name: Clean up large files in /tmp
+  hosts: _ManagedNode
+  become: yes  # Ensure we have sudo privileges to install packages and start services
+  gather_facts: yes
+
+  tasks:
+    - name: Find large files in /tmp directory
+      find:
+        paths: /tmp
+        size: 50M
+      register: large_files
+
+    - name: Remove large files in /tmp
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ large_files.files }}"
+      when: large_files.matched > 0
+
+    - name: Display cleaned files
+      debug:
+        msg: "Removed large file: {{ item.path }}"
+      with_items: "{{ large_files.files }}"
+      when: large_files.matched > 0

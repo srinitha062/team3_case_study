@@ -1,0 +1,32 @@
+---
+- name: Root Cause Analysis - CPU and Memory Utilization
+  hosts: _ManagedNode
+  become: yes  # Ensure we have sudo privileges to install packages and start services
+  gather_facts: yes
+
+  tasks:
+    - name: Check CPU utilization
+      shell: 'top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk "{print 100 - \$1}"'
+      register: cpu_utilization
+      changed_when: false
+
+    - name: Check Memory utilization
+      shell: 'free | grep Mem | awk "{print \$3/\$2 * 100.0}"'
+      register: memory_utilization
+      changed_when: false
+
+    - name: Display CPU and Memory Utilization
+      debug:
+        msg: "CPU: {{ cpu_utilization.stdout }}%, Memory: {{ memory_utilization.stdout }}%"
+
+    - name: Set CPU utilization high flag if > 80%
+      set_fact:
+        cpu_utilization_high: "{{ cpu_utilization.stdout | float > 80 }}"
+
+    - name: Set Memory utilization high flag if > 80%
+      set_fact:
+        memory_utilization_high: "{{ memory_utilization.stdout | float > 80 }}"
+
+    - name: Output utilization flags
+      debug:
+        msg: "CPU High: {{ cpu_utilization_high }}, Memory High: {{ memory_utilization_high }}"
