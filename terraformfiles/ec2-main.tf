@@ -70,7 +70,7 @@ resource "aws_security_group" "aws-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["54.87.33.168/32"]
+    cidr_blocks = ["52.30.120.165/32"]
   }
 
   # HTTP access from anywhere
