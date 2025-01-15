@@ -4,10 +4,10 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "neeha-s3bucket-1212"
+    bucket         = "team3bucket1"
     key            = "globalstate/s3/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "neeha-1212-dblocks"
+    dynamodb_table = "team3_table"
     encrypt        = true
   }
 }
