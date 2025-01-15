@@ -109,7 +109,7 @@ resource "aws_instance" "instance1" {
   }
 
   tags = {
-    Name        = "ManagedNode"
+    Name        = "High-Utilization-EC2"
   }
   }
 
