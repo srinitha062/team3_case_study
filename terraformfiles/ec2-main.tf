@@ -102,7 +102,7 @@ resource "aws_instance" "instance1" {
   key_name               = var.key_name
 
   # Associate the IAM Instance Profile
-  iam_instance_profile   = "EC2"
+  iam_instance_profile   = "EC2FullAccessCaseStudy_Profile"
 
   root_block_device {
     encrypted   = true
