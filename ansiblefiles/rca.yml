@@ -1,6 +1,6 @@
 ---
 - name: Root Cause Analysis - CPU and Memory Utilization
-  hosts: _ManagedNode
+  hosts: _High_Utilization_EC2
   become: yes  # Ensure we have sudo privileges to install packages and start services
   gather_facts: yes
 
