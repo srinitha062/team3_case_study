@@ -4,7 +4,7 @@
 variable "key_name" {
   type = string
  description = "key name"
- default = "Demo"
+ default = "InfraDevOps_CaseStudy"
 }
 variable "region" {
   type    = string
